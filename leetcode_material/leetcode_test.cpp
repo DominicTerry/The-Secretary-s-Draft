@@ -74,3 +74,64 @@ private:
         }
     }
 };
+
+vector<string> removeInvalidParentheses(string s) {
+
+    vector<string> res;
+    queue<string> q;
+    map<string, int> visited;
+    q.push(s);
+    ++visited[s];
+
+    while (!q.empty()) {
+        bool found = false;
+        s = q.front();
+        q.pop();
+        //判断是否合理
+        if (isvalid(s)) {
+            found = true;
+            res.push_back(s);
+        }
+        if (found)continue;
+        //如果此字符串不合理则
+        for (int i = 0;i < s.size();i++) {
+            if (s[i] != ')'&&s[i] != '(')continue;
+            //拼凑新的字符串
+            string t = s.substr(0, i) + s.substr(i + 1);
+            //如果新的字符串之前没遇到过就将其入队列
+            if (visited.find(t) == visited.end()) {
+                q.push(t);
+                ++visited[t];
+            }
+        }
+
+    }
+
+    return res;
+}
+//验证是否是合理串的函数（之前用栈实现过这个功能）
+bool isvalid(string s) {
+
+    int cnt = 0;
+    for (int i = 0;i < s.size();i++) {
+
+        if (s[i] == '(')++cnt;
+        if (s[i] == ')'&&cnt-- == 0)return false;
+    }
+    return cnt == 0;
+}
+
+//测试函数
+int main() {
+
+    string s;
+    while (cin >> s) {
+
+        vector<string> res = removeInvalidParentheses(s);
+
+        for (auto a : res) {
+            cout << a << endl;
+        }
+    }
+    return 0;
+}
